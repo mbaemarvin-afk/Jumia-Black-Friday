@@ -1,26 +1,32 @@
-name: Auto Post Jumia Deals
+name: AutoPost Deals
 
 on:
   schedule:
     - cron: "0 * * * *"  # Runs every hour
-  workflow_dispatch:
+  workflow_dispatch:      # Allows manual trigger
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout repo
         uses: actions/checkout@v3
 
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.11'
+          python-version: '3.10'
 
       - name: Install dependencies
         run: |
-          pip install requests beautifulsoup4 python-telegram-bot bitlyshortener
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt || pip install requests beautifulsoup4 bitlyshortener
 
-      - name: Run auto poster
-        run: python run_once.py
+      - name: Run AutoPost script
+        env:
+          TELEGRAM_TOKEN:  8248716217:AAFlkDGIPGIIz1LHizS3OgSUdj94dp6C5-g
+          TELEGRAM_CHAT_ID: -1003285979057
+          BITLY_TOKEN: 77a3bc0d1d8e382c9dbd2b72efc8d748c0af814b
+          AFF_CODE: 5bed0bdf3d1ca
+        run: python autopost.py
